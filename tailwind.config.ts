@@ -52,6 +52,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        userbubble: {
+          DEFAULT: "#bcccdc", // updated color
+          foreground: "#000", // black text
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
