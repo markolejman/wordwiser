@@ -20,7 +20,7 @@ export default function ChatInterface() {
       <Card className="w-full h-[90vh] flex flex-col">
         <CardHeader className="border-b bg-blue-100">
           <div className="flex items-center justify-center gap-4">
-            <img src="/wisewords.png" alt="Word Wiser Logo" className="h-12" />
+            <img src="/wisewords.png" alt="Word Wiser Logo" draggable="false" className="h-12" />
             <CardTitle className="text-xl">
               Word Wiser | AI Dictionary
             </CardTitle>
@@ -44,7 +44,7 @@ export default function ChatInterface() {
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === "user"
                       ? "bg-userbubble text-userbubble-foreground"
-                      : "bg-muted text-muted-foreground"
+                      : "bg-muted text-black"
                   }`}
                 >
                   {message.content}
@@ -69,7 +69,7 @@ export default function ChatInterface() {
               className="bg-userbubble text-userbubble-foreground hover:bg-slate-300"
             >
               <Send className="h-4 w-4 mr-2" />
-              Clear up word
+              Clear word
             </Button>
           </form>
         </CardFooter>
