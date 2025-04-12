@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ChatInterface() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
@@ -26,6 +26,19 @@ export default function ChatInterface() {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  const [language, setLanguage] = useState("svenska");
+
+  function handleSubmitWithLanguage() {
+    handleSubmit({
+      input,
+      options: {
+        body: {
+          language,
+        },
+      },
+    });
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-blue-50">
@@ -60,7 +73,7 @@ export default function ChatInterface() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === "user"
-                      ? "bg-slate-800 text-white"
+                      ? "bg-neutral-800 text-white"
                       : "bg-muted text-black"
                   }`}
                 >
@@ -73,7 +86,10 @@ export default function ChatInterface() {
         </CardContent>
 
         <CardFooter className="border-t p-4">
-          <form onSubmit={handleSubmit} className="flex w-full gap-2">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmitWithLanguage();
+          }} className="flex w-full gap-2">
             <Input
               value={input}
               onChange={handleInputChange}
@@ -81,6 +97,16 @@ export default function ChatInterface() {
               disabled={isLoading}
               className="flex-grow"
             />
+            <select
+              className="border rounded-md p-2 bg-white text-black"
+              disabled={isLoading}
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="svenska">Svenska</option>
+              <option value="english">English</option>
+              <option value="suomi">Suomi</option>
+            </select>
             <Button
               type="submit"
               disabled={isLoading}
