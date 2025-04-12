@@ -11,17 +11,33 @@ import {
 } from "@/components/ui/card";
 import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useEffect, useRef } from "react";
 
 export default function ChatInterface() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat();
+
+  // This creates a smooth scroll to the bottom of the chat
+  // when new messages are added
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-blue-50">
       <Card className="w-full h-[90vh] flex flex-col">
         <CardHeader className="border-b bg-blue-100">
           <div className="flex items-center justify-center gap-4">
-            <img src="/wisewords.png" alt="Word Wiser Logo" draggable="false" className="h-10" />
+            <img
+              src="/wisewords.png"
+              alt="Word Wiser Logo"
+              draggable="false"
+              className="h-10"
+            />
             <CardTitle className="text-xl">
               Word Wiser | AI Dictionary
             </CardTitle>
@@ -44,7 +60,7 @@ export default function ChatInterface() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === "user"
-                      ? "bg-slate-900 text-white"
+                      ? "bg-slate-800 text-white"
                       : "bg-muted text-black"
                   }`}
                 >
@@ -53,6 +69,7 @@ export default function ChatInterface() {
               </div>
             ))
           )}
+          <div ref={bottomRef} />
         </CardContent>
 
         <CardFooter className="border-t p-4">
