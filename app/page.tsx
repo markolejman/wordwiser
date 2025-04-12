@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Send } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export default function ChatInterface() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
@@ -20,7 +21,7 @@ export default function ChatInterface() {
       <Card className="w-full h-[90vh] flex flex-col">
         <CardHeader className="border-b bg-blue-100">
           <div className="flex items-center justify-center gap-4">
-            <img src="/wisewords.png" alt="Word Wiser Logo" draggable="false" className="h-12" />
+            <img src="/wisewords.png" alt="Word Wiser Logo" draggable="false" className="h-10" />
             <CardTitle className="text-xl">
               Word Wiser | AI Dictionary
             </CardTitle>
@@ -33,7 +34,7 @@ export default function ChatInterface() {
               <p className="text-lg">Type a word to get started...</p>
             </div>
           ) : (
-            messages.map((message) => (
+            messages.map((message: any) => (
               <div
                 key={message.id}
                 className={`flex ${
@@ -43,11 +44,11 @@ export default function ChatInterface() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === "user"
-                      ? "bg-userbubble text-userbubble-foreground"
+                      ? "bg-slate-900 text-white"
                       : "bg-muted text-black"
                   }`}
                 >
-                  {message.content}
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
               </div>
             ))
@@ -66,7 +67,7 @@ export default function ChatInterface() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-userbubble text-userbubble-foreground hover:bg-slate-300"
+              className="bg-blue-100 text-black hover:bg-blue-50"
             >
               <Send className="h-4 w-4 mr-2" />
               Clear word
