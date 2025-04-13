@@ -14,31 +14,20 @@ import ReactMarkdown from "react-markdown";
 import { useEffect, useRef, useState } from "react";
 
 export default function ChatInterface() {
+  // This sets the language to Swedish by default
+  const [language, setLanguage] = useState("svenska");
+
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat();
 
   // This creates a smooth scroll to the bottom of the chat
   // when new messages are added
   const bottomRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-
-  const [language, setLanguage] = useState("svenska");
-
-  function handleSubmitWithLanguage() {
-    handleSubmit({
-      input,
-      options: {
-        body: {
-          language,
-        },
-      },
-    });
-  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-blue-50">
@@ -86,10 +75,7 @@ export default function ChatInterface() {
         </CardContent>
 
         <CardFooter className="border-t p-4">
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmitWithLanguage();
-          }} className="flex w-full gap-2">
+          <form onSubmit={handleSubmit} className="flex w-full gap-2">
             <Input
               value={input}
               onChange={handleInputChange}
