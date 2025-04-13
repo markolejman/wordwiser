@@ -18,7 +18,9 @@ export default function ChatInterface() {
   const [language, setLanguage] = useState("svenska");
 
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat();
+  useChat({
+    body: { language }, // ← explicitly pass language to backend
+  });
 
   // This creates a smooth scroll to the bottom of the chat
   // when new messages are added
