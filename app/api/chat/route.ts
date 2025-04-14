@@ -7,8 +7,6 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages, language } = await req.json(); // ← get the language
 
-  console.log("Language:", language); // ← log the language
-
   const updatedMessages = [
     ...messages,
     {
