@@ -43,7 +43,7 @@ export default function ChatInterface() {
               className="h-10"
             />
             <CardTitle className="text-xl">
-              Word Wiser | AI Dictionary
+              Word Wiser | AI Dictionary | {language.charAt(0).toUpperCase() + language.slice(1)}
             </CardTitle>
           </div>
         </CardHeader>
@@ -64,7 +64,7 @@ export default function ChatInterface() {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === "user"
-                      ? "bg-neutral-800 text-white"
+                      ? "bg-neutral-700 text-white"
                       : "bg-muted text-black"
                   }`}
                 >

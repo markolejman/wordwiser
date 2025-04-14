@@ -3,8 +3,11 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Word Wiser | AI Dictionary',
-  description: 'Word Wiser | AI Dictionary',
+  description: 'Word Wiser | AI Dictionary ',
   generator: 'v0.dev',
+  icons: {
+    icon: '/wisewords.png',
+  },
 }
 
 export default function RootLayout({
