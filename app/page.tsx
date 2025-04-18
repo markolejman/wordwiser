@@ -72,9 +72,9 @@ export default function ChatInterface() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-blue-50">
-      <Card className="w-full h-[90vh] flex flex-col">
-        <CardHeader className="border-b bg-blue-100">
+    <div className="flex items-center justify-center w-screen h-screen">
+      <Card className="w-screen h-screen flex flex-col">
+        <CardHeader className="border-b bg-blue-50">
           <div className="flex items-center justify-center gap-4">
             <img
               src="/wisewords.png"
@@ -83,7 +83,6 @@ export default function ChatInterface() {
               className="h-10"
             />
             <CardTitle className="text-xl">
-              
               Word Wiser | AI Dictionary | {language.charAt(0).toUpperCase() + language.slice(1)}
             </CardTitle>
           </div>
@@ -127,7 +126,7 @@ export default function ChatInterface() {
               className="flex-grow"
             />
             <select
-              className="border rounded-md p-2 bg-white text-black"
+              className="border rounded-md p-0.5 bg-blue-50 text-black"
               disabled={isLoading}
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
@@ -141,8 +140,8 @@ export default function ChatInterface() {
               disabled={isLoading}
               className="bg-blue-100 text-black hover:bg-blue-50"
             >
-              <Send className="h-4 w-4 mr-2" />
-              Clear word
+              <Send className="h-4 w-4 mr-1" />
+              Define
             </Button>
           </form>
         </CardFooter>
