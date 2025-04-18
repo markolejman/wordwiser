@@ -65,10 +65,13 @@ export default function ChatInterface() {
   // This creates a smooth scroll to the bottom of the chat
   // when new messages are added
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
+    inputRef.current?.focus();
   }, [messages]);
 
   return (
@@ -120,6 +123,7 @@ export default function ChatInterface() {
           <form onSubmit={handleSubmit} className="flex w-full gap-2">
             <Input
               value={input}
+              ref={inputRef}
               onChange={handleInputChange}
               placeholder="Type the word you want to know about..."
               disabled={isLoading}
