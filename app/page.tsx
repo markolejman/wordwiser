@@ -93,7 +93,7 @@ export default function ChatInterface() {
 
         <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-300">
+            <div className="flex items-center justify-center text-gray-300">
               <p className="text-lg">Type a word to get started...</p>
             </div>
           ) : (
