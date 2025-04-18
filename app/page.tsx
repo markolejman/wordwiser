@@ -72,8 +72,8 @@ export default function ChatInterface() {
   }, [messages]);
 
   return (
-    <div className="flex items-center justify-center w-screen h-screen">
-      <Card className="w-screen h-screen flex flex-col">
+    <div className="flex items-center justify-center w-screen min-h-screen">
+      <Card className="w-full min-h-screen flex flex-col">
         <CardHeader className="border-b bg-blue-50">
           <div className="flex items-center justify-center gap-4">
             <img
@@ -140,7 +140,7 @@ export default function ChatInterface() {
               disabled={isLoading}
               className="bg-blue-100 text-black hover:bg-blue-50"
             >
-              <Send className="h-4 w-4 mr-1" />
+              <Send className="h-4 w-4 mr-0" />
               Define
             </Button>
           </form>
