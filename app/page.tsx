@@ -75,7 +75,7 @@ export default function ChatInterface() {
   }, [messages]);
 
   return (
-    <div className="flex items-center justify-center w-screen h-screen">
+    <div className="flex items-center justify-center w-screen h-screen p-safe">
       <Card className="w-full h-full flex flex-col">
         <CardHeader className="border-b bg-blue-50">
           <div className="flex items-center justify-center gap-4">
