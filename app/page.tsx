@@ -76,7 +76,7 @@ export default function ChatInterface() {
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
-      <Card className="w-full min-h-screen flex flex-col">
+      <Card className="w-full h-full flex flex-col">
         <CardHeader className="border-b bg-blue-50">
           <div className="flex items-center justify-center gap-4">
             <img
@@ -93,7 +93,7 @@ export default function ChatInterface() {
 
         <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-400">
+            <div className="flex items-center justify-center h-full text-gray-300">
               <p className="text-lg">Type a word to get started...</p>
             </div>
           ) : (
