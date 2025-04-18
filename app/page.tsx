@@ -13,6 +13,46 @@ import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * ChatInterface component renders a chat-based interface for interacting with an AI-powered dictionary.
+ *
+ * @component
+ *
+ * @description
+ * This component provides a user-friendly interface for querying word definitions in multiple languages.
+ * It includes a chat-like UI where users can input words, select a language, and view responses from the AI.
+ * The chat scrolls smoothly to the latest message, and the language selection dynamically updates the backend query.
+ *
+ * @returns {JSX.Element} The rendered ChatInterface component.
+ *
+ * @example
+ * ```tsx
+ * import ChatInterface from './path/to/ChatInterface';
+ *
+ * function App() {
+ *   return <ChatInterface />;
+ * }
+ * ```
+ *
+ * @remarks
+ * - The default language is set to Swedish ("svenska").
+ * - The `useChat` hook is used to manage chat state and interactions.
+ * - The `bottomRef` ensures smooth scrolling to the latest message.
+ * - The component uses Tailwind CSS for styling.
+ *
+ * @dependencies
+ * - `useState`, `useEffect`, `useRef` from React.
+ * - `useChat` custom hook for managing chat logic.
+ * - `ReactMarkdown` for rendering markdown content in messages.
+ * - Tailwind CSS for styling.
+ *
+ * @internalComponents
+ * - `Card`, `CardHeader`, `CardTitle`, `CardContent`, `CardFooter` for layout.
+ * - `Input`, `Button` for user input and actions.
+ * - `Send` icon for the submit button.
+ *
+ * @props None
+ */
 export default function ChatInterface() {
   // This sets the language to Swedish by default
   const [language, setLanguage] = useState("svenska");
@@ -43,6 +83,7 @@ export default function ChatInterface() {
               className="h-10"
             />
             <CardTitle className="text-xl">
+              
               Word Wiser | AI Dictionary | {language.charAt(0).toUpperCase() + language.slice(1)}
             </CardTitle>
           </div>
