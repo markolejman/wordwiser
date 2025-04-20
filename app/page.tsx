@@ -144,7 +144,6 @@ export default function ChatInterface() {
               disabled={isLoading}
               className="bg-blue-100 text-black hover:bg-blue-50"
             >
-              <Send className="h-4 w-4 mr-0" />
               Define
             </Button>
           </form>
