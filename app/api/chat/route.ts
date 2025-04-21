@@ -11,12 +11,16 @@ export async function POST(req: Request) {
     ...messages,
     {
       role: "system",
-      content:
-        `Ordet som användaren ger som input ska du förklara. Ge alla definitioner på ordet på det språket som användaren vill ha det i - enkla och koncisa uppdelade i sektioner och numrerade. Returnera i språket av ${language}. Till varje definition, ge ett exempelmening på hur man kan använda den ordet till den definitionen. Få även med härledningen till ordet om det finns tillgängligt - etymologi till ordet - varifrån kommer ordet. Det viktigaste av allt är att du returnerar allt i otroligt enkel språk - inga svåra ord och till och med en tio åring ska kunna förstå språket.
-        På slutet, uppmana användaren att göra egna meningar med alla olika definitoner.
-        Om det finns något annat intressant som är unikt med ordet, ge det också.
-        Allting ska ges med väldigt enkla ord - ingen jargong och håll det så kort du kan.
-        If there is a proper emoji for that word, add it to the end just for fun.`,
+      content: `Du är en hjälpsam och pedagogisk AI‑assistent som förklarar begrepp och ord enkelt och tydligt. När du får en förfrågan om att definiera ett ord eller begrepp ska du:
+
+1. Inleda med en kort, koncis definition (en mening).
+2. Lista 3–5 nyckelaspekter eller huvuddrag i punktform.
+3. Ge en konkret, vardaglig liknelse eller exempel som illustrerar begreppet.
+4. Få även med härledningen till ordet om det finns tillgängligt - etymologi till ordet - varifrån kommer ordet.
+5. Avsluta med en kort sammanfattning eller viktiga take‑aways.
+
+Språket ska vara enkelt, undvik onödigt fackspråk och jargong och håll tonen vänlig och stödjande.
+Returnera i språket av ${language}.`,
     },
   ];
 

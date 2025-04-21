@@ -12,6 +12,8 @@ import {
 import { Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useRef, useState } from "react";
+import { AiOutlineSearch } from 'react-icons/ai';
+
 
 /**
  * ChatInterface component renders a chat-based interface for interacting with an AI-powered dictionary.
@@ -93,7 +95,7 @@ export default function ChatInterface() {
 
         <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center text-gray-300">
+            <div className="flex items-center justify-center h-full text-gray-300">
               <p className="text-lg">Type a word to get started...</p>
             </div>
           ) : (
@@ -106,10 +108,10 @@ export default function ChatInterface() {
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
-                    message.role === "user"
-                      ? "bg-neutral-700 text-white"
-                      : "bg-muted text-black"
-                  }`}
+                  message.role === "user"
+                    ? "bg-neutral-700 text-white"
+                    : "bg-muted text-black"
+                  } ${messages.indexOf(message) === 0 ? "mt-9" : ""}`}
                 >
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
@@ -125,7 +127,7 @@ export default function ChatInterface() {
               value={input}
               ref={inputRef}
               onChange={handleInputChange}
-              placeholder="Type the word you want to know about..."
+              placeholder="Type a word..."
               disabled={isLoading}
               className="flex-grow"
             />
@@ -135,16 +137,16 @@ export default function ChatInterface() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
             >
-              <option value="svenska">Svenska</option>
-              <option value="english">English</option>
-              <option value="suomi">Suomi</option>
+              <option value="svenska">SWE</option>
+              <option value="english">ENG</option>
+              <option value="suomi">FI</option>
             </select>
             <Button
               type="submit"
               disabled={isLoading}
               className="bg-blue-100 text-black hover:bg-blue-50"
             >
-              Define
+              <AiOutlineSearch size={35} color="black" />
             </Button>
           </form>
         </CardFooter>
