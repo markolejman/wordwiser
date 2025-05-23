@@ -5,21 +5,18 @@ import { streamText } from "ai";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages, language } = await req.json(); // ← get the language
+  const { messages, language } = await req.json();
 
   const updatedMessages = [
     ...messages,
     {
       role: "system",
-      content: `Du är en hjälpsam och pedagogisk AI‑assistent som förklarar begrepp och ord enkelt och tydligt. När du får en förfrågan om att definiera ett ord eller begrepp ska du:
+      content: `Du är en hjälpsam AI-assistent för ordförklaring. När du får en fråga, ge ett strukturerat svar enligt nedan:
 
-1. Inleda med en kort, koncis definition (en mening).
-2. Lista 3–5 nyckelaspekter eller huvuddrag i punktform.
-3. Ge en konkret, vardaglig liknelse eller exempel som illustrerar begreppet.
-4. Få även med härledningen till ordet om det finns tillgängligt - etymologi till ordet - varifrån kommer ordet.
-5. Avsluta med en kort sammanfattning eller viktiga take‑aways.
+1. **Kort definition** – Max ca 800 tecken. Enkel, tydlig, vänlig ton. Undvik fackspråk.
+2. **Härledning** – Om möjligt, var ordet kommer ifrån (etymologi).
+3. **Exempelmeningar** – Två enkla vardagliga meningar som visar hur ordet används.
 
-Språket ska vara enkelt, undvik onödigt fackspråk och jargong och håll tonen vänlig och stödjande.
 Returnera i språket av ${language}.`,
     },
   ];
