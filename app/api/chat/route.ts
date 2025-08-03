@@ -21,13 +21,14 @@ export async function POST(req: Request) {
     const updatedMessages = [
       {
         role: "system",
-        content: `Du är en hjälpsam AI-assistent för ordförklaring. När du får en fråga, ge ett kompakt och strukturerat svar enligt nedan:
+        content: `Du är en hjälpsam AI-assistent för ordförklaring. När du får en fråga, ge ett strukturerat svar i följande format – utan tomma rader mellan delar:
 
-1. **Definition** – Max 800 tecken. Enkel, tydlig, vänlig ton. Undvik fackspråk.
-2. **Härledning** – Om möjligt, var ordet kommer ifrån (etymologi).
-3. **Exempel** – två till tre vardagliga meningar med olika böjningsformer (t.ex. "köpa", "köpte", "köpt").
+**Definition:** Kort, tydlig och enkel förklaring på max 800 tecken. Använd bara modern svenska. Inga facktermer. Undvik ålderdomliga eller ovanliga betydelser, även om de förekommer historiskt.  
+**Härledning:** Om möjligt, förklara ordets ursprung eller etymologi.
+**Exempel:**
+- Ge 2–3 korta meningar med olika böjningar av ordet i vardagligt bruk. Punktlista med \`-\`. Inga tomrader.
 
-Svara endast i ${language}.`,
+Svara endast i ${language}, och följ formatet exakt.`,
       },
       ...messages,
     ];

@@ -113,10 +113,14 @@ export default function ChatInterface() {
     }
   };
 
+  function normalizeMarkdown(text: string): string {
+    return text.replace(/\*\*Exempel:\*\:\s*\n+/g, "**Exempel:**\n").trim();
+  }
+
   return (
     <div className="flex items-center justify-center w-screen h-screen pt-safe-t">
       <Card className="w-full h-full flex flex-col">
-        <CardHeader className="sticky top-0 z-10 border-b bg-blue-50">
+        <CardHeader className="sticky top-0 z-10 border-b bg-white">
           <div className="flex items-center justify-center gap-4">
             <img
               src="/wisewords.png"
@@ -148,13 +152,41 @@ export default function ChatInterface() {
                 }`}
               >
                 <div
-                  className={`max-w-[70%] rounded-lg p-3 whitespace-pre-wrap break-words ${
-                    msg.role === "user"
-                      ? "bg-neutral-700 text-white"
-                      : "bg-muted text-black"
+                  className={`max-w-[70%] p-4 whitespace-pre-wrap break-words ${
+                    msg.role === "user" ? "text-white" : "text-black"
                   }`}
+                  style={
+                    msg.role === "assistant"
+                      ? {
+                          background: "rgba(255, 255, 255, 0.75)",
+                          backdropFilter: "blur(6px)",
+                          borderRadius: "16px",
+                          padding: "1rem",
+                          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                          border: "1px solid rgba(255, 255, 255, 0.3)",
+                        }
+                      : {
+                          background:
+                            "linear-gradient(45deg, #595959, #6a6a6a)",
+                          boxShadow:
+                            "inset 10px 10px 30px #4d4d4d, inset -10px -10px 30px #757575",
+                          borderRadius: "18px",
+                        }
+                  }
                 >
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <span>{children}</span>,
+                      ul: (props) => (
+                        <ul
+                          className="list-disc list-inside mt-0 mb-0"
+                          {...props}
+                        />
+                      ),
+                    }}
+                  >
+                    {normalizeMarkdown(msg.content)}
+                  </ReactMarkdown>
                 </div>
               </div>
             ))
