@@ -3,15 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { AiOutlineSearch } from "react-icons/ai";
 import ReactMarkdown from "react-markdown";
+import { AiOutlineSearch } from "react-icons/ai";
 
 interface Message {
   id: string;
@@ -114,133 +107,136 @@ export default function ChatInterface() {
   };
 
   function normalizeMarkdown(text: string): string {
-    return text.replace(/\*\*Exempel:\*\:\s*\n+/g, "**Exempel:**\n").trim();
+    return text
+      .replace(/\*\*Exempel:\*\:\s*\n+/g, "**Exempel:**\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
   }
 
   return (
     <div className="flex flex-col w-screen h-screen">
-      <Card className="w-full h-full flex flex-col">
-        <CardHeader className="sticky top-0 z-10 border-b bg-white">
-          <div className="flex items-center justify-center gap-4">
-            <img
-              src="/wisewords.png"
-              alt="Word Wiser Logo"
-              draggable="false"
-              className="h-10"
-            />
-            <CardTitle className="text-xl">
-              Word Wiser | AI Dictionary |{" "}
-              {language.charAt(0).toUpperCase() + language.slice(1)}
-            </CardTitle>
+      {/* Header */}
+      <header className="shrink-0 border-b bg-white z-10">
+        <div className="flex items-center justify-center gap-4 p-4">
+          <img
+            src="/wisewords.png"
+            alt="Word Wiser Logo"
+            draggable="false"
+            className="h-10"
+          />
+          <h1 className="text-xl font-semibold">
+            Word Wiser | AI Dictionary |{" "}
+            {language.charAt(0).toUpperCase() + language.slice(1)}
+          </h1>
+        </div>
+      </header>
+
+      {/* Scrollable content */}
+      <main className="flex-1 overflow-y-auto px-4 py-2 space-y-4">
+        {messages.length === 0 ? (
+          <div className="flex items-center justify-center h-full text-gray-500">
+            <p className="text-lg text-center">
+              Type a word, and for a more accurate definition, include a short
+              sentence or phrase where the word is used.
+            </p>
           </div>
-        </CardHeader>
-
-        <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
-          {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-500">
-              <p className="text-lg">
-                Type a word, and for a more accurate definition, include a short
-                sentence or phrase where the word is used.
-              </p>
-            </div>
-          ) : (
-            messages.map((msg) => (
+        ) : (
+          messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`flex ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                key={msg.id}
-                className={`flex ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
+                className={`max-w-[70%] p-4 whitespace-pre-wrap break-words ${
+                  msg.role === "user" ? "text-white" : "text-black"
                 }`}
+                style={
+                  msg.role === "assistant"
+                    ? {
+                        background: "rgba(255, 255, 255, 0.75)",
+                        backdropFilter: "blur(6px)",
+                        borderRadius: "16px",
+                        padding: "1rem",
+                        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                        border: "1px solid rgba(255, 255, 255, 0.3)",
+                      }
+                    : {
+                        background: "linear-gradient(45deg, #595959, #6a6a6a)",
+                        boxShadow:
+                          "inset 10px 10px 30px #4d4d4d, inset -10px -10px 30px #757575",
+                        borderRadius: "18px",
+                      }
+                }
               >
-                <div
-                  className={`max-w-[70%] p-4 whitespace-pre-wrap break-words ${
-                    msg.role === "user" ? "text-white" : "text-black"
-                  }`}
-                  style={
-                    msg.role === "assistant"
-                      ? {
-                          background: "rgba(255, 255, 255, 0.75)",
-                          backdropFilter: "blur(6px)",
-                          borderRadius: "16px",
-                          padding: "1rem",
-                          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-                          border: "1px solid rgba(255, 255, 255, 0.3)",
-                        }
-                      : {
-                          background:
-                            "linear-gradient(45deg, #595959, #6a6a6a)",
-                          boxShadow:
-                            "inset 10px 10px 30px #4d4d4d, inset -10px -10px 30px #757575",
-                          borderRadius: "18px",
-                        }
-                  }
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <span>{children}</span>,
+                    ul: (props) => (
+                      <ul
+                        className="list-disc list-inside mt-0 mb-0"
+                        {...props}
+                      />
+                    ),
+                  }}
                 >
-                  <ReactMarkdown
-                    components={{
-                      p: ({ children }) => <span>{children}</span>,
-                      ul: (props) => (
-                        <ul
-                          className="list-disc list-inside mt-0 mb-0"
-                          {...props}
-                        />
-                      ),
-                    }}
-                  >
-                    {normalizeMarkdown(msg.content)}
-                  </ReactMarkdown>
-                </div>
-              </div>
-            ))
-          )}
-
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-muted px-3 py-2 rounded-lg flex gap-1">
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                <div
-                  className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.1s" }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
-                ></div>
+                  {normalizeMarkdown(msg.content)}
+                </ReactMarkdown>
               </div>
             </div>
-          )}
+          ))
+        )}
 
-          <div ref={bottomRef} />
-        </CardContent>
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-muted px-3 py-2 rounded-lg flex gap-1">
+              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+              <div
+                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
+            </div>
+          </div>
+        )}
 
-        <CardFooter className="border-t p-4">
-          <form onSubmit={handleSubmit} className="flex w-full gap-2">
-            <Input
-              value={input}
-              ref={inputRef}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a word and phrase where the word is used..."
-              disabled={isLoading}
-              className="flex-grow"
-            />
-            <select
-              className="border rounded-md p-0.5 bg-blue-50 text-black"
-              disabled={isLoading}
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-            >
-              <option value="svenska">SWE</option>
-              <option value="english">ENG</option>
-              <option value="suomi">FI</option>
-            </select>
-            <Button
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="bg-blue-100 text-black hover:bg-blue-50"
-            >
-              <AiOutlineSearch size={35} color="black" />
-            </Button>
-          </form>
-        </CardFooter>
-      </Card>
+        <div ref={bottomRef} />
+      </main>
+
+      {/* Footer / input field */}
+      <footer className="shrink-0 border-t p-4 bg-white">
+        <form onSubmit={handleSubmit} className="flex w-full gap-2">
+          <Input
+            value={input}
+            ref={inputRef}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a word and phrase where the word is used..."
+            disabled={isLoading}
+            className="flex-grow"
+          />
+          <select
+            className="border rounded-md p-0.5 bg-blue-50 text-black"
+            disabled={isLoading}
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="svenska">SWE</option>
+            <option value="english">ENG</option>
+            <option value="suomi">FI</option>
+          </select>
+          <Button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="bg-blue-100 text-black hover:bg-blue-50"
+          >
+            <AiOutlineSearch size={35} color="black" />
+          </Button>
+        </form>
+      </footer>
     </div>
   );
 }
