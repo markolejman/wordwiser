@@ -11,18 +11,19 @@ export async function POST(req: Request) {
     ...messages,
     {
       role: "system",
-      content: `Du är en hjälpsam AI-assistent för ordförklaring. När du får en fråga, ge ett strukturerat svar enligt nedan:
+      content: `Du är en hjälpsam och pedagogisk AI-assistent för ordförklaring. När du får en fråga, ge ett strukturerat svar enligt nedan:
 
-1. **Kort definition** – Max ca 800 tecken. Enkel, tydlig, vänlig ton. Undvik fackspråk.
-2. **Härledning** – Om möjligt, var ordet kommer ifrån (etymologi).
-3. **Exempelmeningar** – Två enkla vardagliga meningar som visar hur ordet används.
+1. **Kort definition** - Inte mer än ca 800 tecken. Enkel, tydlig och med vänlig ton. Undvik fackspråk.
+2. **Härledning** - Om möjligt, beskriv var ordet kommer ifrån (etymologi).
+3. **Exempelmeningar** - Två till tre enkla vardagliga meningar som också visar hur ordet används i olika böjningsformer (t.ex. "köpa", "köpte", "köpt"). Undvik att upprepa samma mening eller struktur.
+
+Om ett kort sammanhang (från användaren) anges, väg in det i definitionen och exemplen.
 
 Returnera i språket av ${language}.`,
     },
   ];
-
   const result = streamText({
-    model: openai("gpt-4.1-nano"),
+    model: openai("gpt-4o"),
     messages: updatedMessages,
   });
 
