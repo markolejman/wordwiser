@@ -1,5 +1,6 @@
 "use client";
-import { useChat } from "@ai-sdk/react";
+
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,72 +10,108 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Send } from "lucide-react";
+import { AiOutlineSearch } from "react-icons/ai";
 import ReactMarkdown from "react-markdown";
-import { useEffect, useRef, useState } from "react";
-import { AiOutlineSearch } from 'react-icons/ai';
 
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
 
-/**
- * ChatInterface component renders a chat-based interface for interacting with an AI-powered dictionary.
- *
- * @component
- *
- * @description
- * This component provides a user-friendly interface for querying word definitions in multiple languages.
- * It includes a chat-like UI where users can input words, select a language, and view responses from the AI.
- * The chat scrolls smoothly to the latest message, and the language selection dynamically updates the backend query.
- *
- * @returns {JSX.Element} The rendered ChatInterface component.
- *
- * @example
- * ```tsx
- * import ChatInterface from './path/to/ChatInterface';
- *
- * function App() {
- *   return <ChatInterface />;
- * }
- * ```
- *
- * @remarks
- * - The default language is set to Swedish ("svenska").
- * - The `useChat` hook is used to manage chat state and interactions.
- * - The `bottomRef` ensures smooth scrolling to the latest message.
- * - The component uses Tailwind CSS for styling.
- *
- * @dependencies
- * - `useState`, `useEffect`, `useRef` from React.
- * - `useChat` custom hook for managing chat logic.
- * - `ReactMarkdown` for rendering markdown content in messages.
- * - Tailwind CSS for styling.
- *
- * @internalComponents
- * - `Card`, `CardHeader`, `CardTitle`, `CardContent`, `CardFooter` for layout.
- * - `Input`, `Button` for user input and actions.
- * - `Send` icon for the submit button.
- *
- * @props None
- */
 export default function ChatInterface() {
-  // This sets the language to Swedish by default
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
   const [language, setLanguage] = useState("svenska");
-
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-  useChat({
-    body: { language }, // ← explicitly pass language to backend
-  });
-
-  // This creates a smooth scroll to the bottom of the chat
-  // when new messages are added
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     inputRef.current?.focus();
   }, [messages]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: input.trim(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map((msg) => ({
+            role: msg.role,
+            content: msg.content,
+          })),
+          language,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No response body");
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "",
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      const decoder = new TextDecoder();
+      let done = false;
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+
+        if (value) {
+          const chunk = decoder.decode(value, { stream: true });
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === assistantMessage.id
+                ? { ...msg, content: msg.content + chunk }
+                : msg
+            )
+          );
+        }
+      }
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 2).toString(),
+          role: "assistant",
+          content: `🚨 Ett fel inträffade: ${errorMsg}`,
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen pt-safe-t">
@@ -88,36 +125,57 @@ export default function ChatInterface() {
               className="h-10"
             />
             <CardTitle className="text-xl">
-              Word Wiser | AI Dictionary | {language.charAt(0).toUpperCase() + language.slice(1)}
+              Word Wiser | AI Dictionary |{" "}
+              {language.charAt(0).toUpperCase() + language.slice(1)}
             </CardTitle>
           </div>
         </CardHeader>
 
         <CardContent className="flex-grow overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-300">
-              <p className="text-lg">Type a word to get started...</p>
+            <div className="flex items-center justify-center h-full text-gray-500">
+              <p className="text-lg">
+                Type a word, and for a more accurate definition, include a short
+                sentence or phrase where the word is used.
+              </p>
             </div>
           ) : (
-            messages.map((message: any) => (
+            messages.map((msg) => (
               <div
-                key={message.id}
+                key={msg.id}
                 className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
+                  msg.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
-                  message.role === "user"
-                    ? "bg-neutral-700 text-white"
-                    : "bg-muted text-black"
-                  } ${messages.indexOf(message) === 0 ? "mt-9" : ""}`}
+                  className={`max-w-[70%] rounded-lg p-3 whitespace-pre-wrap break-words ${
+                    msg.role === "user"
+                      ? "bg-neutral-700 text-white"
+                      : "bg-muted text-black"
+                  }`}
                 >
-                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
               </div>
             ))
           )}
+
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="bg-muted px-3 py-2 rounded-lg flex gap-1">
+                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                <div
+                  className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+              </div>
+            </div>
+          )}
+
           <div ref={bottomRef} />
         </CardContent>
 
@@ -126,8 +184,8 @@ export default function ChatInterface() {
             <Input
               value={input}
               ref={inputRef}
-              onChange={handleInputChange}
-              placeholder="Type a word..."
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type a word and phrase where the word is used..."
               disabled={isLoading}
               className="flex-grow"
             />
@@ -143,7 +201,7 @@ export default function ChatInterface() {
             </select>
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !input.trim()}
               className="bg-blue-100 text-black hover:bg-blue-50"
             >
               <AiOutlineSearch size={35} color="black" />

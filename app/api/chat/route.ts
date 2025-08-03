@@ -5,27 +5,44 @@ import { streamText } from "ai";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages, language } = await req.json();
+  try {
+    const { messages, language } = await req.json();
 
-  const updatedMessages = [
-    ...messages,
-    {
-      role: "system",
-      content: `Du är en hjälpsam och pedagogisk AI-assistent för ordförklaring. När du får en fråga, ge ett strukturerat svar enligt nedan:
+    if (!process.env.OPENAI_API_KEY) {
+      return new Response(
+        JSON.stringify({ error: "OpenAI API key not configured" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-1. **Kort definition** - Inte mer än ca 800 tecken. Enkel, tydlig och med vänlig ton. Undvik fackspråk.
-2. **Härledning** - Om möjligt, beskriv var ordet kommer ifrån (etymologi).
-3. **Exempelmeningar** - Två till tre enkla vardagliga meningar som också visar hur ordet används i olika böjningsformer (t.ex. "köpa", "köpte", "köpt"). Undvik att upprepa samma mening eller struktur.
+    const updatedMessages = [
+      {
+        role: "system",
+        content: `Du är en hjälpsam AI-assistent för ordförklaring. När du får en fråga, ge ett kompakt och strukturerat svar enligt nedan:
 
-Om ett kort sammanhang (från användaren) anges, väg in det i definitionen och exemplen.
+1. **Definition** – Max 800 tecken. Enkel, tydlig, vänlig ton. Undvik fackspråk.
+2. **Härledning** – Om möjligt, var ordet kommer ifrån (etymologi).
+3. **Exempel** – två till tre vardagliga meningar med olika böjningsformer (t.ex. "köpa", "köpte", "köpt").
 
-Returnera i språket av ${language}.`,
-    },
-  ];
-  const result = streamText({
-    model: openai("gpt-4o"),
-    messages: updatedMessages,
-  });
+Svara endast i ${language}.`,
+      },
+      ...messages,
+    ];
 
-  return result.toDataStreamResponse();
+    const result = streamText({
+      model: openai("gpt-4o"),
+      messages: updatedMessages,
+    });
+
+    return result.toTextStreamResponse();
+  } catch (error) {
+    console.error("API Error:", error);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
