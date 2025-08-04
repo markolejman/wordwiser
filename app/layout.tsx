@@ -24,7 +24,7 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </Head>
-      <body>{children}</body>
+      <body className="flex flex-col min-h-dvh">{children}</body>
     </html>
   );
 }

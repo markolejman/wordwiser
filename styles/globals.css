@@ -95,7 +95,14 @@ body {
 
 html,
 body {
-  height: 100%;
+  padding: 0;
   margin: 0;
-  overflow: hidden; /* Förhindra dubbelscroll */
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+@layer utilities {
+  .min-h-dvh {
+    min-height: 100dvh;
+  }
 }
