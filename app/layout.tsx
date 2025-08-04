@@ -3,7 +3,7 @@ import './globals.css';
 import Head from 'next/head'; // ✅ import this
 
 export const metadata: Metadata = {
-  title: 'Word Wiser | AI Dictionary',
+  title: 'WordWiser | AI Dictionary',
   description: 'Word Wiser | AI Dictionary',
   generator: 'v0.dev',
   icons: {

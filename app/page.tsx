@@ -15,7 +15,7 @@ interface Message {
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [language, setLanguage] = useState("svenska");
+  const [language, setLanguage] = useState("swe");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -98,7 +98,7 @@ export default function ChatInterface() {
         {
           id: (Date.now() + 2).toString(),
           role: "assistant",
-          content: `🚨 Ett fel inträffade: ${errorMsg}`,
+          content: `Ett fel inträffade: ${errorMsg}`,
         },
       ]);
     } finally {
@@ -114,27 +114,27 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col w-screen h-screen">
+    <div className="flex flex-col h-screen w-screen">
       {/* Header */}
       <header className="shrink-0 border-b bg-white z-10">
         <div className="flex items-center justify-center gap-4 p-4">
           <img
             src="/wisewords.png"
-            alt="Word Wiser Logo"
+            alt="WordWiser Logo"
             draggable="false"
             className="h-10"
           />
-          <h1 className="text-xl font-semibold">
-            Word Wiser | AI Dictionary |{" "}
-            {language.charAt(0).toUpperCase() + language.slice(1)}
-          </h1>
+            <h1 className="text-xl font-semibold">
+            WordWiser | AI powered Dictionary |{" "}
+            {language.toUpperCase()}
+            </h1>
         </div>
       </header>
 
-      {/* Scrollable content */}
-      <main className="flex-1 overflow-y-auto px-4 py-2 space-y-4">
+      {/* MAIN: Scrollable content */}
+      <main className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className="flex items-center justify-center min-h-[150px] text-gray-500">
             <p className="text-lg text-center">
               Type a word, and for a more accurate definition, include a short
               sentence or phrase where the word is used.
@@ -207,33 +207,33 @@ export default function ChatInterface() {
         <div ref={bottomRef} />
       </main>
 
-      {/* Footer / input field */}
+      {/* Footer */}
       <footer className="shrink-0 border-t p-4 bg-white">
-        <form onSubmit={handleSubmit} className="flex w-full gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
             value={input}
             ref={inputRef}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a word and phrase where the word is used..."
+            autoComplete="off"
+            placeholder="Type a word and phrase..."
             disabled={isLoading}
-            className="flex-grow"
           />
           <select
-            className="border rounded-md p-0.5 bg-blue-50 text-black"
+            className="border rounded p-1 bg-blue-50"
             disabled={isLoading}
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
           >
-            <option value="svenska">SWE</option>
-            <option value="english">ENG</option>
-            <option value="suomi">FI</option>
+            <option value="swe">SWE</option>
+            <option value="eng">ENG</option>
+            <option value="fi">FI</option>
           </select>
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-blue-100 text-black hover:bg-blue-50"
+            className="bg-blue-100 text-black"
           >
-            <AiOutlineSearch size={35} color="black" />
+            <AiOutlineSearch size={24} />
           </Button>
         </form>
       </footer>
