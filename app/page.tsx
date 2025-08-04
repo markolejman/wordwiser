@@ -21,6 +21,17 @@ export default function ChatInterface() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // ✅ iOS Safari height fix
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setVH();
+    window.addEventListener("resize", setVH);
+    return () => window.removeEventListener("resize", setVH);
+  }, []);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     inputRef.current?.focus();
@@ -114,7 +125,10 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen">
+    <div
+      className="flex flex-col w-screen"
+      style={{ height: "calc(var(--vh, 1vh) * 100)" }} // ✅ fixad höjd
+    >
       {/* Header */}
       <header className="shrink-0 border-b bg-white z-10">
         <div className="flex items-center justify-center gap-4 p-4">
@@ -124,14 +138,13 @@ export default function ChatInterface() {
             draggable="false"
             className="h-10"
           />
-            <h1 className="text-xl font-semibold">
-            WordWiser | AI powered Dictionary |{" "}
-            {language.toUpperCase()}
-            </h1>
+          <h1 className="text-xl font-semibold">
+            WordWiser | AI powered Dictionary | {language.toUpperCase()}
+          </h1>
         </div>
       </header>
 
-      {/* MAIN: Scrollable content */}
+      {/* Main */}
       <main className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center min-h-[150px] text-gray-500">
