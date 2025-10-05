@@ -57,3 +57,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Loader: more pronounced bounce for typing indicator */
+@keyframes dot-bounce-strong {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-dot-bounce {
+  animation: dot-bounce-strong 0.9s ease-in-out infinite;
+}

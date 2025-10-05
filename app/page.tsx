@@ -3,6 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ReactMarkdown from "react-markdown";
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -203,15 +210,15 @@ export default function ChatInterface() {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-muted px-3 py-2 rounded-lg flex gap-1">
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+            <div className="bg-muted/70 backdrop-blur px-3 py-2 rounded-full flex items-center gap-2">
+              <div className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-dot-bounce"></div>
               <div
-                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                style={{ animationDelay: "0.1s" }}
+                className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-dot-bounce"
+                style={{ animationDelay: "0.12s" }}
               ></div>
               <div
-                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                style={{ animationDelay: "0.2s" }}
+                className="w-2.5 h-2.5 bg-gray-500 rounded-full animate-dot-bounce"
+                style={{ animationDelay: "0.24s" }}
               ></div>
             </div>
           </div>
@@ -221,8 +228,11 @@ export default function ChatInterface() {
       </main>
 
       {/* Footer */}
-      <footer className="shrink-0 border-t p-4 bg-white">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+      <footer className="shrink-0 border-t p-4 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto max-w-3xl w-full flex items-center gap-2"
+        >
           <Input
             value={input}
             ref={inputRef}
@@ -230,23 +240,29 @@ export default function ChatInterface() {
             autoComplete="off"
             placeholder="Type a word and phrase..."
             disabled={isLoading}
+            className="h-12 rounded-full shadow-sm focus-visible:ring-2 focus-visible:ring-sky-400"
           />
-          <select
-            className="border rounded p-1 bg-blue-50"
-            disabled={isLoading}
+          <Select
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onValueChange={setLanguage}
+            disabled={isLoading}
           >
-            <option value="swe">SWE</option>
-            <option value="eng">ENG</option>
-            <option value="fi">FI</option>
-          </select>
+            <SelectTrigger className="h-12 w-[92px] rounded-full bg-background/80">
+              <SelectValue placeholder="Lang" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="swe">SWE</SelectItem>
+              <SelectItem value="eng">ENG</SelectItem>
+              <SelectItem value="fi">FI</SelectItem>
+            </SelectContent>
+          </Select>
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-blue-100 text-black"
+            size="icon"
+            className="h-12 w-12 rounded-full shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-600 hover:to-indigo-600"
           >
-            <AiOutlineSearch size={24} />
+            <AiOutlineSearch size={22} />
           </Button>
         </form>
       </footer>
