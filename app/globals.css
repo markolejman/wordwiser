@@ -72,3 +72,38 @@
 .animate-dot-bounce {
   animation: dot-bounce-strong 0.9s ease-in-out infinite;
 }
+
+/* Modern scrollbar styling */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted)) transparent;
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+@supports selector(::-webkit-scrollbar) {
+  *::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--accent)) 100%
+    );
+    border-radius: 9999px;
+    border: 3px solid transparent; /* creates a pill with space to track */
+    background-clip: padding-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--muted)) 0%,
+      hsl(var(--primary)) 100%
+    );
+  }
+}
