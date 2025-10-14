@@ -146,7 +146,7 @@ export default function ChatInterface() {
             className="h-10"
           />
           <h1 className="text-xl font-semibold">
-            WordWiser | AI powered Dictionary | {language.toUpperCase()}
+            LEJTECH | WordWiser | AI powered Dictionary | {language.toUpperCase()}
           </h1>
         </div>
       </header>
