@@ -241,14 +241,14 @@ export default function ChatInterface() {
             autoComplete="off"
             placeholder="Type a word and phrase..."
             disabled={isLoading}
-            className="h-12 rounded-xl shadow-sm focus-visible:ring-2 focus-visible:ring-sky-400"
+            className="h-12 rounded-xl shadow-sm bg-white focus-visible:ring-2 focus-visible:ring-gray-300"
           />
           <Select
             value={language}
             onValueChange={setLanguage}
             disabled={isLoading}
           >
-            <SelectTrigger className="h-12 w-[92px] rounded-xl bg-background/80">
+            <SelectTrigger className="h-12 w-[92px] rounded-xl bg-white">
               <SelectValue placeholder="Lang" />
             </SelectTrigger>
             <SelectContent>
@@ -261,7 +261,7 @@ export default function ChatInterface() {
             type="submit"
             disabled={isLoading || !input.trim()}
             size="icon"
-            className="h-12 w-24 rounded-xl shadow-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-600 hover:to-indigo-600"
+            className="h-12 w-24 rounded-xl shadow-lg bg-gradient-to-r from-black to-neutral-800 text-white hover:from-neutral-900 hover:to-neutral-700"
           >
             <AiOutlineSearch size={22} />
           </Button>
